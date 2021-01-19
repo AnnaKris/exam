@@ -1,5 +1,17 @@
+/**
+name: Weather Service
+date: 20.01.2021
+version: 1.1
+author: Dolynai Anna
+
+Description:
+That is a single-page application.
+This application finds information about weather forecast from service https://openweathermap.org/ by API calls and displays that in a usuful way for users.
+**/
+
 "use strict";
 
+//class for searching weather forecast
 class WeatherService
    {
        constructor()
@@ -24,6 +36,9 @@ class WeatherService
        }
    }
 
+//class for searching weather by location
+//inheritance of class WeatherService
+//show data of minute forecast for 1 hour, hourly forecast for 48 hours, daily forecast for 7 days, historical data for 5 previous days
 class WeatherServiceByLocation extends WeatherService
    {
        constructor(lat,lon)
@@ -32,6 +47,9 @@ class WeatherServiceByLocation extends WeatherService
            this.url=`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=metric&appid=9adf68c522fb40f207372bd38af2dbf3`;
        }
    }
+
+//class for searching weather by name of city
+//inheritance of class WeatherService
 class WeatherServiceByCityName extends WeatherService
    {
        constructor(city,country)
@@ -40,6 +58,8 @@ class WeatherServiceByCityName extends WeatherService
            this.url=`https://api.openweathermap.org/data/2.5/weather?q=${city}${!country?'':','+country}&units=metric&appid=9adf68c522fb40f207372bd38af2dbf3`;
        }
    }
+//class for searching weather of closest cities of main location
+//inheritance of class WeatherService
 class WeatherServiceByClosestCities extends WeatherService
    {
        constructor(lat,lon)
@@ -48,6 +68,9 @@ class WeatherServiceByClosestCities extends WeatherService
            this.url=`https://api.openweathermap.org/data/2.5/find?lat=${lat}&lon=${lon}&cnt=5&units=metric&appid=9adf68c522fb40f207372bd38af2dbf3`;
        }
    }
+
+//class for searching 5 day weather forecast (shows data every 3 hours) 
+//inheritance of class WeatherService
 class FiveDayHourlyForecast extends WeatherService
    {
        constructor(lat,lon)
@@ -57,6 +80,7 @@ class FiveDayHourlyForecast extends WeatherService
        }
    }
 
+//class for building of current weather block
 class CurrentWeatherBlock
    {
        constructor(weatherData)
@@ -114,7 +138,7 @@ class CurrentWeatherBlock
        }
 
     }
-
+//class for building of hourly weather block
 class HourlyWeatherBlock
    {
        constructor(weatherData)
@@ -171,11 +195,6 @@ class HourlyWeatherBlock
            let table=document.createElement('table');
            let tbody=document.createElement('tbody');
            let tr1=document.createElement('tr');
-           console.log('ddddddddddd');
-           console.log(this.weatherData[0]);
-           console.log(new Date((this.weatherData[0].hour)*1000).getUTCDate());
-           console.log(new Date(new Date().getTime()+this.weatherData[0].timezone*1000).getUTCDate());
-            console.log('ddddddddddd')
            tr1.innerHTML=`<td>${((new Date((this.weatherData[0].hour)*1000).getUTCDate()!=new Date(new Date().getTime()+this.weatherData[0].timezone*1000).getUTCDate())? this.dayOfWeek(new Date(this.weatherData[0].hour*1000).getDay()).toUpperCase() :"TODAY" )} </td>`;
            let tr2=document.createElement('tr');
            tr2.innerHTML=`<td> </td>`
@@ -215,6 +234,7 @@ class HourlyWeatherBlock
        }
    }
 
+//class for building block with data of nearby places
 class NearbyPlacesWeatherBlock
    {
        constructor(weatherData)
@@ -251,6 +271,7 @@ class NearbyPlacesWeatherBlock
        }
    }
 
+//class for showing information about error
 class ErrorBlock
    {
        constructor( data)
@@ -270,6 +291,7 @@ class ErrorBlock
        }
    }
 
+//class for building daily forecast block
 class ForecastBlock
    {
        constructor(weatherData)
@@ -299,6 +321,7 @@ class ForecastBlock
 
    }
 
+//class for searching weather forecast data and display this information to users
 class SearchWeather
    {
        constructor()
@@ -315,8 +338,41 @@ class SearchWeather
            this.coords='';
            this.mainCity={};
            this.input=document.querySelector('[name=search]');
-
-
+           
+           this.start();
+       }
+       
+       setAnHourForecastData(data,timezone)
+       {
+           let obj={};
+           obj.hour=data.dt+timezone;
+           obj.iconId=data.weather[0].icon;
+           obj.forecast=data.weather[0].main;
+           obj.temp=data.temp;
+           obj.feelsTemp=data.feels_like;
+           obj.windSpeed=data.wind_speed;
+           obj.windDeg=data.wind_deg;
+           obj.timezone=timezone;
+           this.hourlyToday.push(obj);
+           return this.hourlyToday;
+           
+       }
+       setThreeHourForecastData(data,timezone)
+       {
+           let obj={};
+           
+           obj.hour=data.dt+timezone;
+           obj.iconId=data.weather[0].icon;
+           obj.forecast=data.weather[0].main;
+           obj.temp=data.main.temp;
+           obj.feelsTemp=data.main.feels_like;
+           obj.windSpeed=data.wind.speed;
+           obj.windDeg=data.wind.deg;
+           obj.timezone=timezone;
+           
+           this.hourlyToday.push(obj);
+           
+           return this.hourlyToday;
        }
 
        buildCurrentDay(pLat,pLon)
@@ -334,16 +390,7 @@ class SearchWeather
                        {
                            if ((new Date((item.dt+data.timezone_offset)*1000).getUTCDate()==new Date(new Date().getTime()+data.timezone_offset*1000).getUTCDate())&&count<6)
                                {
-                                   let obj={};
-                                   obj.hour=item.dt+data.timezone_offset;
-                                   obj.iconId=item.weather[0].icon;
-                                   obj.forecast=item.weather[0].main;
-                                   obj.temp=item.temp;
-                                   obj.feelsTemp=item.feels_like;
-                                   obj.windSpeed=item.wind_speed;
-                                   obj.windDeg=item.wind_deg;
-                                   obj.timezone=data.timezone_offset;
-                                   this.hourlyToday.push(obj);
+                                   this.setAnHourForecastData(item,data.timezone_offset);
                                    count++;
                                }
 
@@ -380,61 +427,27 @@ class SearchWeather
                    .then((data)=>{
                        for (let item of data.list)
                            {
-                               console.log(new Date((item.dt+data.city.timezone)*1000).getUTCDate());
-                               console.log(new Date(new Date().getTime()+(data.city.timezone*1000)).getUTCDate());
-                               let obj={};
                                if (new Date((item.dt+data.city.timezone)*1000).getUTCDate()==new Date(new Date().getTime()+(data.city.timezone*1000)).getUTCDate())
                                    {
-                                        console.log(item);
-                                       
-                                       obj.hour=item.dt+data.city.timezone;
-                                       obj.iconId=item.weather[0].icon;
-                                       obj.forecast=item.weather[0].main;
-                                       obj.temp=item.main.temp;
-                                       obj.feelsTemp=item.main.feels_like;
-                                       obj.windSpeed=item.wind.speed;
-                                       obj.windDeg=item.wind.deg;
-                                       obj.timezone=data.city.timezone;
-                                       this.hourlyToday.push(obj);
-console.log(this.hourlyToday);
+                                       this.setThreeHourForecastData(item,data.city.timezone);
+
                                    }
-                               else{
-////                                   obj.hour=new Date().getTime()/1000;
-////                                   //fix!!!
-////                                   obj.timezone=data.city.timezone;
-////                                   this.hourlyToday.push(obj);
-//                                   console.log(this.hourlyToday);
-                                   if(this.hourlyToday.length==0)
+                           }
+                       if(this.hourlyToday.length==0)
                            {
-                               console.log('hello');
-//                               
-                   let count=0;
-//                   
-                   for (let item of data1.hourly)
-                       {
-                           if ((new Date((item.dt+data1.timezone_offset)*1000).getUTCDate()==new Date(new Date().getTime()+data1.timezone_offset*1000).getUTCDate())&&count<6)
-                               {
-                                   let obj={};
-                                   obj.hour=item.dt+data1.timezone_offset;
-                                   obj.iconId=item.weather[0].icon;
-                                   obj.forecast=item.weather[0].main;
-                                   obj.temp=item.temp;
-                                   obj.feelsTemp=item.feels_like;
-                                   obj.windSpeed=item.wind_speed;
-                                   obj.windDeg=item.wind_deg;
-                                   obj.timezone=data1.timezone_offset;
-                                   this.hourlyToday.push(obj);
-                                   count++;
-                               }
-//
-                    console.log(this.hourlyToday);
-                           }
+                               let count=0;
+
+                               for (let item of data1.hourly)
+                                   {
+                                       if ((new Date((item.dt+data1.timezone_offset)*1000).getUTCDate()==new Date(new Date().getTime()+data1.timezone_offset*1000).getUTCDate())&&count<6)
+                                           {
+                                               this.setAnHourForecastData(item,data1.timezone_offset);
+
+                                               count++;
+                                           }
+
+                                    }
                            } 
-                               }
-//                               
-                           }
-                       console.log(this.hourlyToday);
-//                       (this.hourlyToday.length==0)&&(this.hourlyToday.push({hour:new Date().getTime()/1000}))
                        
                        this.hourlyWeatherBlock=new HourlyWeatherBlock(this.hourlyToday);
                        this.hourlyWeatherBlock.build('weather-data');
@@ -445,51 +458,22 @@ console.log(this.hourlyToday);
                                {
                                    if ((new Date((item.dt+data.city.timezone)*1000).getUTCDate()==new Date((+e.target.closest('.container').id+data.city.timezone)*1000).getUTCDate()))
                                    {
-                                       let obj={};
-                                       obj.hour=item.dt+data.city.timezone;
-                                       obj.iconId=item.weather[0].icon;
-                                       obj.forecast=item.weather[0].main;
-                                       obj.temp=item.main.temp;
-                                       obj.feelsTemp=item.main.feels_like;
-                                       obj.windSpeed=item.wind.speed;
-                                       obj.windDeg=item.wind.deg;
-                                       obj.timezone=data.city.timezone;
-                                       this.hourlyToday.push(obj);
-                                   }
-                             
-
-                                   
+                                       this.setThreeHourForecastData(item,data.city.timezone);
+                                   } 
                                }
-                           
-                                
-                                  if(this.hourlyToday.length==0)
-                           {
-                               console.log('hello');
-//                               
-                   let count=0;
-//                   
-                   for (let item of data1.hourly)
-                       {
-                           if ((new Date((item.dt+data1.timezone_offset)*1000).getUTCDate()==new Date(new Date().getTime()+data1.timezone_offset*1000).getUTCDate())&&count<6)
+                           if(this.hourlyToday.length==0)
                                {
-                                   let obj={};
-                                   obj.hour=item.dt+data1.timezone_offset;
-                                   obj.iconId=item.weather[0].icon;
-                                   obj.forecast=item.weather[0].main;
-                                   obj.temp=item.temp;
-                                   obj.feelsTemp=item.feels_like;
-                                   obj.windSpeed=item.wind_speed;
-                                   obj.windDeg=item.wind_deg;
-                                   obj.timezone=data1.timezone_offset;
-                                   this.hourlyToday.push(obj);
-                                   count++;
-                               }
-//
-                    console.log(this.hourlyToday);
-                           }
-                           }  
-                               
-                           
+                                   let count=0;
+                                   for (let item of data1.hourly)
+                                       {
+                                           if ((new Date((item.dt+data1.timezone_offset)*1000).getUTCDate()==new Date(new Date().getTime()+data1.timezone_offset*1000).getUTCDate())&&count<6)
+                                               {
+                                                   this.setAnHourForecastData(item,data1.timezone_offset);
+                                                   count++;
+                                               }
+                                       }
+                                }
+
                            document.getElementById('weather-data').querySelector('#hourly-weather').remove();
                            this.hourlyWeatherBlock=new HourlyWeatherBlock(this.hourlyToday);
                            this.hourlyWeatherBlock.build('weather-data');
@@ -499,6 +483,8 @@ console.log(this.hourlyToday);
                    });
            });
        }
+       
+       
        
        start()
        {
@@ -513,6 +499,7 @@ console.log(this.hourlyToday);
            document.getElementById('today').addEventListener('click',(e)=>{
                e.preventDefault();
                this.btn2=true;
+               
                if(this.btn1)
                    {
                        document.getElementById('today').classList.toggle("activ-forecast");
@@ -521,78 +508,59 @@ console.log(this.hourlyToday);
                        this.buildCurrentDay(this.coords.lat,this.coords.lon);
                        this.btn1=false;
                    }
-           });document.getElementById('forecast').addEventListener('click',(e)=>{
+           });
+           
+           document.getElementById('forecast').addEventListener('click',(e)=>{
                e.preventDefault();
                this.btn1=true;
                if(this.btn2)
                    {
                        document.getElementById('today').classList.toggle("activ-forecast");
-               document.getElementById('forecast').classList.toggle("activ-forecast");
+                       document.getElementById('forecast').classList.toggle("activ-forecast");
                        document.getElementById('weather-data').innerHTML='';
-
-
-
-               this.buildForecast(this.coords.lat,this.coords.lon);
-
+                       
+                       this.buildForecast(this.coords.lat,this.coords.lon);
+                       
                        this.btn2=false;
                    }
-
-//                       this.start();
-
            });
 
            document.getElementById('search-form').addEventListener('submit',(e)=>{
-                e.preventDefault();
-               console.log(1);
+               e.preventDefault();
                this.input=document.querySelector('[name=search]');
-//                      console.log(input);
-
-                let weatherByCity=new WeatherServiceByCityName(this.input.value);
-
-weatherByCity.search()
-.then((data)=>{
-   if (!document.getElementById('today').classList.contains("activ-forecast"))
-               {
-                   this.btn1=false;
-                   this.btn2=true;
-                   document.getElementById('forecast').classList.remove("activ-forecast");
-                   document.getElementById('today').classList.add("activ-forecast")
-               }
-   if(data.cod=="404")
-       {
-           let errorBlock=new ErrorBlock(this.input.value);
-            errorBlock.build('weather-data');
-           this.input.placeholder=`${this.input.value}`;
-           setTimeout(()=>{this.input.value=''},1000);
-           this.btn2=false;
-       }
-   else
-       {
-           this.coords={lat:data.coord.lat,lon:data.coord.lon};
-           this.buildCurrentDay(this.coords.lat,this.coords.lon);
-           this.input.placeholder=`${this.mainCity.name}, ${this.mainCity.country}`;
-           this.input.value='';
-
-           this.btn2=true;
-       }
-
-
-
-});
-
-
-
-
+               
+               let weatherByCity=new WeatherServiceByCityName(this.input.value);
+               
+               weatherByCity.search()
+                   .then((data)=>{
+                        if (!document.getElementById('today').classList.contains("activ-forecast"))
+                            {
+                                this.btn1=false;
+                                this.btn2=true;
+                                document.getElementById('forecast').classList.remove("activ-forecast");
+                                document.getElementById('today').classList.add("activ-forecast");
+                            }
+                
+                        if(data.cod=="404")
+                           {
+                               let errorBlock=new ErrorBlock(this.input.value);
+                                errorBlock.build('weather-data');
+                               this.input.placeholder=`${this.input.value}`;
+                               setTimeout(()=>{this.input.value=''},1000);
+                               this.btn2=false;
+                           }
+                        else
+                           {
+                               this.coords={lat:data.coord.lat,lon:data.coord.lon};
+                               this.buildCurrentDay(this.coords.lat,this.coords.lon);
+                               this.input.placeholder=`${this.mainCity.name}, ${this.mainCity.country}`;
+                               this.input.value='';
+                               this.btn2=true;
+                           }
+               });
+           
            });
-
-
-
-
-
-
-
-
        }
    }
-let a= new SearchWeather();
-a.start();
+
+let startService= new SearchWeather();

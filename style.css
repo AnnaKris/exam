@@ -1,0 +1,261 @@
+body{
+    font-family: sans-serif;
+    margin: 0px;
+    width: 100%;
+    background-color: #d1d1d1;
+    padding-bottom: 4%;
+}
+.container{
+    display: flex;
+}
+
+header{
+    background-color: rgba(245, 245, 245, 0.65);
+    justify-content: space-between;
+    padding: .5% 17.5% 2%;
+}
+#logo{
+    margin: 0px;
+    font-size: 2em;
+    color: lightseagreen;
+    font-weight: bold;
+    text-decoration: none;
+}
+#search-form{
+    background-color: white;
+    width: 30%;
+    align-items: center;
+    border: 0.5px solid gray;
+
+}
+
+
+#search-input{
+    width: 94%;
+    justify-content: space-between;
+    padding: 0px 3%;
+
+
+}
+#search-input [name="search"]{
+    width: 95%;
+    outline: none;
+    border:none;
+    margin: 0px;
+}
+#search-input i{
+
+}
+nav{
+    width: 65%;
+    background-color: #343434;
+    padding: 0 17.5%;
+
+}
+nav a{
+    display: inline-block;
+    padding: 1% 2%;
+    color: white;
+    text-decoration: none;
+}
+.activ-forecast{
+    border-left: 1px solid gray;
+    border-right: 1px solid gray;
+    border-bottom: 2.5px solid lightseagreen;
+    border-radius: 3px;
+}
+#weather-data{
+    width: 65%;
+    margin: auto;
+}
+#current-weather{
+
+    background-color: rgba(245, 245, 245, 0.65);
+    margin-top: 2%;
+    padding: 0 2% 1%;
+}
+#current-weather>:first-child{
+    justify-content: space-between;
+    align-items: center;
+    color: lightseagreen;
+    font-weight: bold;
+
+}
+#current-weather>:last-child{
+    justify-content: space-around;
+    align-items: center;
+
+}
+
+#weather-type p{
+    text-align: center;
+    margin-top: 0px;
+    color: gray;
+
+}
+
+#temperature span{
+    font-size: 3.5em;
+
+}
+#temperature p{
+    font-size: 0.88em;
+    margin-top: 0;
+    color: gray;
+
+}
+
+#day-duration{
+    color: gray;
+    justify-content: space-between;
+}
+#day-duration div:nth-child(even){
+    text-align: right !important;
+}
+#hourly-weather{
+    background-color: rgba(245, 245, 245, 0.65);
+    margin-top: 2%;
+    padding: 0 2.5% 1.5%;
+
+}
+#hourly-weather h3{
+    color: lightseagreen;
+    font-weight: bold;
+
+}
+#hourly-weather table{
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#hourly-weather td{
+    padding: 1%;
+    text-align: center;
+}
+#hourly-weather td:first-child{
+    text-align: left!important;
+    color: gray;
+
+}
+#hourly-weather tr:nth-child(1) td:first-child{
+    color: initial !important;
+
+}
+
+#hourly-weather tr{
+    padding: 1%;
+    border-top: 1px solid #ddd;
+}
+
+#hourly-weather tr:nth-child(1),tr:nth-child(2),tr:nth-child(3){
+    padding: 1%;
+    border: none !important;
+}
+
+#nearby{
+    background-color: rgba(245, 245, 245, 0.65);
+    margin-top: 2%;
+    padding: 0 2.5% 2%;
+
+}
+
+#nearby h3{
+    color: lightseagreen;
+    font-weight: bold;
+
+}
+#nearby-city
+{
+   width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+#nearby-city div
+{
+   background-color: rgb(221, 221, 221);
+    width: 48%;
+    margin:  1% auto;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-around;
+
+}
+#nearby-city div >div
+{
+   width: 20%;
+
+}
+#nearby-city p
+{
+    margin: 2.5%;
+   width: 70%;
+
+}
+
+#nearby-city img
+{
+   width: 50%;
+
+}
+#error{
+    width: 100%;
+    background-color:rgba(245, 245, 245, 0.65);
+    padding: 3%; 
+    margin: 2% auto;
+}
+#error img{
+    width: 70%;
+    display: block;
+    margin:auto;
+
+}
+#error p{
+    text-align: center;
+    color: gray;
+    font-weight: bold;
+    font-size: 2em;
+
+}
+#forecast-block
+{
+    margin-top: 2%;
+    justify-content: space-between;
+
+}
+
+#forecast-block div
+{
+    background-color:rgba(245, 245, 245, 0.65);
+    width:13.8%;
+    padding: 2% 3%;
+    flex-direction: column;
+    align-items: flex-start;
+
+
+}
+#forecast-block h3
+{
+    color: lightseagreen;
+    font-weight: bold;
+
+
+}
+#forecast-block p
+{
+    margin: 0px;
+    color: gray;
+
+}
+#forecast-block span
+{
+    font-size: 2.5em;
+
+}
+#forecast-block img
+{
+    font-size: 2.5em;
+    display: block;
+    margin: auto !important;
+    width: 85%;
+
+}

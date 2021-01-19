@@ -225,12 +225,9 @@ class HourlyWeatherBlock
            tbody.append(tr5);
            tbody.append(tr6);
            table.append(tbody);
-
            div.append(table);
            document.getElementById(weaterDivId).append(div);
            this.weatherData=[];
-
-
        }
    }
 
@@ -241,7 +238,6 @@ class NearbyPlacesWeatherBlock
        {
            this.weatherData=weatherData;
        }
-
        build(weaterDivId)
        {
            let div=document.createElement('div');
@@ -277,7 +273,6 @@ class ErrorBlock
        constructor( data)
        {
            this.data=data;
-
        }
 
         build(weaterDivId)
@@ -318,7 +313,6 @@ class ForecastBlock
            });
            document.getElementById(weaterDivId).append(div);
        }
-
    }
 
 //class for searching weather forecast data and display this information to users
@@ -360,7 +354,6 @@ class SearchWeather
        setThreeHourForecastData(data,timezone)
        {
            let obj={};
-           
            obj.hour=data.dt+timezone;
            obj.iconId=data.weather[0].icon;
            obj.forecast=data.weather[0].main;
@@ -369,9 +362,7 @@ class SearchWeather
            obj.windSpeed=data.wind.speed;
            obj.windDeg=data.wind.deg;
            obj.timezone=timezone;
-           
            this.hourlyToday.push(obj);
-           
            return this.hourlyToday;
        }
 
@@ -430,7 +421,6 @@ class SearchWeather
                                if (new Date((item.dt+data.city.timezone)*1000).getUTCDate()==new Date(new Date().getTime()+(data.city.timezone*1000)).getUTCDate())
                                    {
                                        this.setThreeHourForecastData(item,data.city.timezone);
-
                                    }
                            }
                        if(this.hourlyToday.length==0)
@@ -442,10 +432,8 @@ class SearchWeather
                                        if ((new Date((item.dt+data1.timezone_offset)*1000).getUTCDate()==new Date(new Date().getTime()+data1.timezone_offset*1000).getUTCDate())&&count<6)
                                            {
                                                this.setAnHourForecastData(item,data1.timezone_offset);
-
                                                count++;
                                            }
-
                                     }
                            } 
                        
@@ -483,9 +471,6 @@ class SearchWeather
                    });
            });
        }
-       
-       
-       
        start()
        {
            if(this.launch)
@@ -518,19 +503,14 @@ class SearchWeather
                        document.getElementById('today').classList.toggle("activ-forecast");
                        document.getElementById('forecast').classList.toggle("activ-forecast");
                        document.getElementById('weather-data').innerHTML='';
-                       
                        this.buildForecast(this.coords.lat,this.coords.lon);
-                       
                        this.btn2=false;
                    }
            });
-
            document.getElementById('search-form').addEventListener('submit',(e)=>{
                e.preventDefault();
                this.input=document.querySelector('[name=search]');
-               
                let weatherByCity=new WeatherServiceByCityName(this.input.value);
-               
                weatherByCity.search()
                    .then((data)=>{
                         if (!document.getElementById('today').classList.contains("activ-forecast"))
@@ -540,11 +520,10 @@ class SearchWeather
                                 document.getElementById('forecast').classList.remove("activ-forecast");
                                 document.getElementById('today').classList.add("activ-forecast");
                             }
-                
                         if(data.cod=="404")
                            {
                                let errorBlock=new ErrorBlock(this.input.value);
-                                errorBlock.build('weather-data');
+                               errorBlock.build('weather-data');
                                this.input.placeholder=`${this.input.value}`;
                                setTimeout(()=>{this.input.value=''},1000);
                                this.btn2=false;

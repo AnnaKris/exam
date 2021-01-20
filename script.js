@@ -1,13 +1,12 @@
 /**
-name: Weather Service
-date: 20.01.2021
-version: 1.1
-author: Dolynai Anna
-
-Description:
-That is a single-page application.
-This application finds information about weather forecast from service https://openweathermap.org/ by API calls and displays that in a usuful way for users.
-**/
+* name: Weather Service
+* date: 20.01.2021
+* version: 1.1
+* author: Dolynai Anna
+* Description:
+* That is a single-page application.
+* This application finds information about weather forecast from service https://openweathermap.org/ by API calls and displays that in a usuful way for users.
+*/
 
 "use strict";
 

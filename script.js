@@ -317,8 +317,9 @@ class ForecastBlock
 //class for searching weather forecast data and display this information to users
 class SearchWeather
    {
-       constructor()
+       constructor(dataDivId)
        {
+           this.dataDivId=dataDivId;
            this.weatherData = new WeatherServiceByLocation;
            this.currentWeatherBlock='';
            this.hourlyWeatherBlock='';
@@ -375,7 +376,7 @@ class SearchWeather
                    let count=0;
                    this.hourlyToday=[];
                    this.currentWeatherBlock=new CurrentWeatherBlock(data);
-                   this.currentWeatherBlock.build('weather-data');
+                   this.currentWeatherBlock.build(this.dataDivId);
                    for (let item of data.hourly)
                        {
                            if ((new Date((item.dt+data.timezone_offset)*1000).getUTCDate()==new Date(new Date().getTime()+data.timezone_offset*1000).getUTCDate())&&count<6)
@@ -386,13 +387,13 @@ class SearchWeather
 
                        }
                    this.hourlyWeatherBlock=new HourlyWeatherBlock(this.hourlyToday);
-                   this.hourlyWeatherBlock.build('weather-data');
+                   this.hourlyWeatherBlock.build(this.dataDivId);
 
                    currentNearbyWeather.search()
                        .then((data)=>{
                            this.mainCity={name:data.list[0].name, country:data.list[0].sys.country};
                            this.nearbyCitiesBlock=new NearbyPlacesWeatherBlock(data.list);
-                           this.nearbyCitiesBlock.build('weather-data');
+                           this.nearbyCitiesBlock.build(this.dataDivId);
                            this.input.placeholder=`${this.mainCity.name}, ${this.mainCity.country}`;
                            this.input.value='';
                    });
@@ -411,7 +412,7 @@ class SearchWeather
                    let forecast=new ForecastBlock(data1.daily);
                    let forecastWeather =new FiveDayHourlyForecast(pLat,pLon);
 
-                   forecast.build('weather-data');
+                   forecast.build(this.dataDivId);
                
                    forecastWeather.search()
                    .then((data)=>{
@@ -437,7 +438,7 @@ class SearchWeather
                            } 
                        
                        this.hourlyWeatherBlock=new HourlyWeatherBlock(this.hourlyToday);
-                       this.hourlyWeatherBlock.build('weather-data');
+                       this.hourlyWeatherBlock.build(this.dataDivId);
                        this.hourlyToday=[];
                        
                        document.getElementById('forecast-block').addEventListener('click',(e)=>{
@@ -461,9 +462,9 @@ class SearchWeather
                                        }
                                 }
 
-                           document.getElementById('weather-data').querySelector('#hourly-weather').remove();
+                           document.getElementById(this.dataDivId).querySelector('#hourly-weather').remove();
                            this.hourlyWeatherBlock=new HourlyWeatherBlock(this.hourlyToday);
-                           this.hourlyWeatherBlock.build('weather-data');
+                           this.hourlyWeatherBlock.build(this.dataDivId);
                            this.hourlyToday=[];
                        });
                    
@@ -488,7 +489,7 @@ class SearchWeather
                    {
                        document.getElementById('today').classList.toggle("activ-forecast");
                        document.getElementById('forecast').classList.toggle("activ-forecast");
-                       document.getElementById('weather-data').innerHTML='';
+                       document.getElementById(this.dataDivId).innerHTML='';
                        this.buildCurrentDay(this.coords.lat,this.coords.lon);
                        this.btn1=false;
                    }
@@ -501,7 +502,7 @@ class SearchWeather
                    {
                        document.getElementById('today').classList.toggle("activ-forecast");
                        document.getElementById('forecast').classList.toggle("activ-forecast");
-                       document.getElementById('weather-data').innerHTML='';
+                       document.getElementById(this.dataDivId).innerHTML='';
                        this.buildForecast(this.coords.lat,this.coords.lon);
                        this.btn2=false;
                    }
@@ -522,7 +523,7 @@ class SearchWeather
                         if(data.cod=="404")
                            {
                                let errorBlock=new ErrorBlock(this.input.value);
-                               errorBlock.build('weather-data');
+                               errorBlock.build(this.dataDivId);
                                this.input.placeholder=`${this.input.value}`;
                                setTimeout(()=>{this.input.value=''},1000);
                                this.btn2=false;
@@ -541,4 +542,4 @@ class SearchWeather
        }
    }
 
-let startService= new SearchWeather();
+let startService= new SearchWeather('weather-data');

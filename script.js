@@ -101,7 +101,7 @@ class CurrentWeatherBlock
                     <div class="container">
                        <h3>CURRENT WEATHER</h3>
                        <p id="date">
-                       ${this.date.getDate().toString().padStart(2, '0') }.${(this.date.getMonth()+1).toString().padStart(2,'0')}.${this.date.getFullYear()}
+                       ${this.timeSetting(this.weatherData.current.dt).getUTCDate().toString().padStart(2, '0') }.${(this.timeSetting(this.weatherData.current.dt).getUTCMonth()+1).toString().padStart(2,'0')}.${this.timeSetting(this.weatherData.current.dt).getUTCFullYear()}
                        </p>
                     </div>
                     <div class="container">
